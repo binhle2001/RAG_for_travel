@@ -1,0 +1,11 @@
+langchain
+huggingface_hub
+langchain_openai
+lancedb
+openai
+tiktoken
+rank_bm25
+pypdf
+qdrant-client
+sentence-transformer
+langchain-community
