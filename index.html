@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat with Bot</title>
+<style>
+    #chat-container {
+        width: 400px;
+        height: 500px;
+        border: 1px solid #ccc;
+        overflow-y: scroll;
+        padding: 10px;
+    }
+    #message-input {
+        width: calc(100% - 20px);
+    }
+</style>
+</head>
+<body>
+
+<div id="chat-container"></div>
+<input type="text" id="message-input" placeholder="Type your message here..." onkeydown="handleKeyDown(event)">
+<button onclick="sendMessage()">Send</button>
+
+<script>
+    const socket = new WebSocket("ws://localhost:8765"); // Replace "localhost:8765" with your actual socket URL
+
+    socket.onopen = function(event) {
+        console.log("Connected to WebSocket");
+    };
+
+    socket.onmessage = function(event) {
+        appendMessage(event.data);
+    };
+
+    function sendMessage() {
+        const messageInput = document.getElementById("message-input");
+        const message = messageInput.value.trim();
+        if (message !== "") {
+            appendMessage("You: " + message);
+            socket.send(message);
+            messageInput.value = "";
+        }
+    }
+
+    function appendMessage(message) {
+        const chatContainer = document.getElementById("chat-container");
+        const messageElement = document.createElement("div");
+        messageElement.textContent = message;
+        chatContainer.appendChild(messageElement);
+        chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
+    }
+
+    function handleKeyDown(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    }
+</script>
+
+</body>
+</html>
