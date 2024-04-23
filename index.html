@@ -15,6 +15,25 @@
     #message-input {
         width: calc(100% - 20px);
     }
+    .message-container {
+        margin-bottom: 5px;
+        overflow: hidden;
+    }
+    .message {
+        background-color: #f1f1f1;
+        padding: 8px;
+        border-radius: 10px;
+        word-wrap: break-word;
+        float: right;
+        clear: both;
+        margin-right: 10px;
+    }
+    .message.from-bot {
+        background-color: #4CAF50;
+        color: white;
+        float: left;
+        margin-left: 10px;
+    }
 </style>
 </head>
 <body>
@@ -38,17 +57,24 @@
         const messageInput = document.getElementById("message-input");
         const message = messageInput.value.trim();
         if (message !== "") {
-            appendMessage("You: " + message);
+            appendMessage("You: " + message, false);
             socket.send(message);
             messageInput.value = "";
         }
     }
 
-    function appendMessage(message) {
+    function appendMessage(message, fromBot = true) {
         const chatContainer = document.getElementById("chat-container");
+        const messageContainer = document.createElement("div");
         const messageElement = document.createElement("div");
+        messageContainer.classList.add("message-container");
+        messageElement.classList.add("message");
+        if (fromBot) {
+            messageElement.classList.add("from-bot");
+        }
         messageElement.textContent = message;
-        chatContainer.appendChild(messageElement);
+        messageContainer.appendChild(messageElement);
+        chatContainer.appendChild(messageContainer);
         chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to bottom
     }
 

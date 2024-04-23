@@ -61,11 +61,12 @@ def gen_prompt(message, session_id):
     else:
         history_str = build_history(session_id)
         docs = ensemble_retriever.get_relevant_documents(message)
+        retrievals = []
         for doc in docs:
             retrievals.append(doc.page_content)
         contexts = build_final_context(retrievals)
         history_openai_format.append({"role": "user", "content": RAG_SELF_REFINE_PROMPT_HISTORY.format(context=contexts, history=history_str, question=message) })
-        return history_openai_format
+    return history_openai_format
 
 app = FastAPI()
 session_id = 0
